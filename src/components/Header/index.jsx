@@ -90,7 +90,7 @@ export default class Header extends Component {
                     </div>
                     <div className={style.caption}>
                         <h5>Swallow</h5>
-                        <h6>海报制作发布工具</h6>
+                        <h6>海报活动页生成工具</h6>
                     </div>
                 </header>
             )
