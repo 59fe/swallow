@@ -186,6 +186,7 @@ class List extends React.Component{
         const attention = this.state.filter.attention || ''
         const { posters, loading, error, total } = this.state
         const data = this.props.posters
+        const { user } = this.props
 
         let self = this
 
@@ -224,7 +225,7 @@ class List extends React.Component{
 
         return (
             <div className={style.listPage}>
-                <Header type="list"/>
+                <Header user={this.props.user} type="list"/>
                 <div className={style.pageContainer}>
                     <div className={style.listFilter}>
                         <div className={style.listTypes}>
@@ -232,7 +233,7 @@ class List extends React.Component{
                             <a className={type === 'mobile' && style.active} onClick = { () => this.changeFilter('type','mobile') }  >移动端</a>
                             <a className={type === 'pc' && style.active} onClick = { () => this.changeFilter('type','pc') }  >桌面端</a>
                         </div>
-                        <div className={style.attentionType}>关注：<Switch defaultChecked={ attention ? true :false}  onChange={ onChange } /></div>
+                        {user && user.uid && <div className={style.attentionType}>关注：<Switch defaultChecked={ attention ? true :false}  onChange={ onChange } /></div>}
                         <div className={style.listSearcher}>
                             <button onClick={(e) => this.applyFilter()} className={style.listSearchBtn}><Icon type="search" /> 搜索</button>
                             <input
@@ -244,29 +245,29 @@ class List extends React.Component{
                     </div>
                     <ul className={style.listItems}>
                         <li className={style.listHead}>
-                            <span className={style.attention}>关注</span>
+                            {user && user.uid && <span className={style.attention}>关注</span>}
                             <span className={style.itemTitle}>标题</span>
                             <span className={style.itemType}>类型</span>
                             <span className={style.itemDate}>修改时间</span>
-                            <span className={style.itemOptBtns}>操作</span>
+                            {user && user.uid && <span className={style.itemOptBtns}>操作</span>}
                         </li>
                         {data.map((item, index) => {
                             return (
                                 <li key={index + 1}>
-                                    <div className={style.attention} >
+                                    {user && user.uid && <div className={style.attention} >
                                         <Icon onClick={ () => this.attentionStatus( item.id, item.attention)} type={ item.attention ? 'star' : 'star-o'} />
-                                    </div>
+                                    </div>}
                                     <div className={style.itemTitle} >
                                         <a href={Config.CDNURL  + '/' + item.pathname} target="_blank">{item.title}</a>
                                     </div>
                                     <span className={style.itemType}>{item.layout === 'mobile' ? '移动端' : '桌面端'}</span>
                                     <span className={style.itemDate}>{item.updateDate || item.createDate}</span>
-                                    <div className={style.itemOptBtns}>
+                                    {user && user.uid &&   <div className={style.itemOptBtns}>
                                         <a onClick={ () => this.showConfirm(item.id) }><Icon type="delete" /> 删除</a>
-                                    </div>
-                                    <div className={style.itemOptBtns}>
+                                    </div>}
+                                    {user && user.uid && <div className={style.itemOptBtns}>
                                         <a href={'#/edit/' + item.id} target="_blank"><Icon type="edit" /> 修改</a>
-                                    </div>
+                                    </div>}
                                 </li>
                             )
                         })}
@@ -284,7 +285,8 @@ class List extends React.Component{
 
  const mapStateToProps = (state) => {
     return {
-      posters: state.list.posters.items
+      posters: state.list.posters.items,
+      user: state.user.userinfo
     }
  }
 
