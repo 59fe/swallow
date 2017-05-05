@@ -4,7 +4,8 @@ import ReactDOM from 'react-dom'
 import { Router, Route, IndexRedirect, hashHistory } from 'react-router'
 import { syncHistoryWithStore } from 'react-router-redux'
 import { Provider } from 'react-redux'
-
+import { setUserInfo } from './actions/user'
+import { getCurrentUser } from './io'
 import { notification } from 'antd'
 
 import List from './containers/List'
@@ -18,6 +19,10 @@ notification.config({
 
 const store = createStore()
 const history = syncHistoryWithStore(hashHistory, store)
+
+getCurrentUser().then((data) => {
+  store.dispatch(setUserInfo(data))
+})
 
 ReactDOM.render(
     <Provider store={store}>
