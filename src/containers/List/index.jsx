@@ -10,7 +10,6 @@ import { formatTime, JSON2URL } from '../../functions'
 import * as IO from '../../io'
 import * as Config from '../../config.json'
 
-
 class List extends React.Component{
 
     constructor(props) {
@@ -186,7 +185,7 @@ class List extends React.Component{
         const attention = this.state.filter.attention || ''
         const { posters, loading, error, total } = this.state
         const data = this.props.posters
-        const { user } = this.props
+        const { userinfo } = this.props
 
         let self = this
 
@@ -225,7 +224,7 @@ class List extends React.Component{
 
         return (
             <div className={style.listPage}>
-                <Header user={this.props.user} type="list"/>
+                <Header userinfo={this.props.userinfo} type="list"/>
                 <div className={style.pageContainer}>
                     <div className={style.listFilter}>
                         <div className={style.listTypes}>
@@ -233,7 +232,7 @@ class List extends React.Component{
                             <a className={type === 'mobile' && style.active} onClick = { () => this.changeFilter('type','mobile') }  >移动端</a>
                             <a className={type === 'pc' && style.active} onClick = { () => this.changeFilter('type','pc') }  >桌面端</a>
                         </div>
-                        {user && user.uid && <div className={style.attentionType}>关注：<Switch defaultChecked={ attention ? true :false}  onChange={ onChange } /></div>}
+                        {userinfo && userinfo.uid && <div className={style.attentionType}>关注：<Switch defaultChecked={ attention ? true :false}  onChange={ onChange } /></div>}
                         <div className={style.listSearcher}>
                             <button onClick={(e) => this.applyFilter()} className={style.listSearchBtn}><Icon type="search" /> 搜索</button>
                             <input
@@ -245,16 +244,16 @@ class List extends React.Component{
                     </div>
                     <ul className={style.listItems}>
                         <li className={style.listHead}>
-                            {user && user.uid && <span className={style.attention}>关注</span>}
+                            {userinfo && userinfo.uid && <span className={style.attention}>关注</span>}
                             <span className={style.itemTitle}>标题</span>
                             <span className={style.itemType}>类型</span>
                             <span className={style.itemDate}>修改时间</span>
-                            {user && user.uid && <span className={style.itemOptBtns}>操作</span>}
+                            {userinfo && userinfo.uid && <span className={style.itemOptBtns}>操作</span>}
                         </li>
                         {data.map((item, index) => {
                             return (
                                 <li key={index + 1}>
-                                    {user && user.uid && <div className={style.attention} >
+                                    {userinfo && userinfo.uid && <div className={style.attention} >
                                         <Icon onClick={ () => this.attentionStatus( item.id, item.attention)} type={ item.attention ? 'star' : 'star-o'} />
                                     </div>}
                                     <div className={style.itemTitle} >
@@ -262,10 +261,10 @@ class List extends React.Component{
                                     </div>
                                     <span className={style.itemType}>{item.layout === 'mobile' ? '移动端' : '桌面端'}</span>
                                     <span className={style.itemDate}>{item.updateDate || item.createDate}</span>
-                                    {user && user.uid &&   <div className={style.itemOptBtns}>
+                                    {userinfo && userinfo.uid &&   <div className={style.itemOptBtns}>
                                         <a onClick={ () => this.showConfirm(item.id) }><Icon type="delete" /> 删除</a>
                                     </div>}
-                                    {user && user.uid && <div className={style.itemOptBtns}>
+                                    {userinfo && userinfo.uid && <div className={style.itemOptBtns}>
                                         <a href={'#/edit/' + item.id} target="_blank"><Icon type="edit" /> 修改</a>
                                     </div>}
                                 </li>
@@ -286,7 +285,7 @@ class List extends React.Component{
  const mapStateToProps = (state) => {
     return {
       posters: state.list.posters.items,
-      user: state.user.userinfo
+      userinfo: state.user.userinfo
     }
  }
 

@@ -56,14 +56,10 @@ export default class Header extends Component {
 
     render() {
 
-        let { pageData, editorState, user, type } = this.props
+        let { pageData, editorState, userinfo, type } = this.props
         type = type || 'editor'
 
         if (type === 'editor') {
-
-            if (!user || !user.uid) {
-              return null
-            }
 
             return (
                 <header className={style.appHeader}>
@@ -89,7 +85,7 @@ export default class Header extends Component {
                 <header className={style.appHeader}>
                     <div className={style.logo}></div>
                     <div className={style.headerBtns}>
-                        {(user && user.uid) ?
+                        {(userinfo && userinfo.uid) ?
                           <a className={style.btnPublish} href="#/edit/new"><Icon type="plus" /> 新建海报</a> :
                           <a className={style.btnPublish} href="//tms.dbike.me/#/login?referer=swallow"><Icon type="user" /> 登录</a>
                         }

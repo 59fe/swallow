@@ -51,6 +51,10 @@ class Editor extends React.Component{
 
     render() {
 
+        if (!this.props.userinfo) {
+          return null
+        }
+
         if (this.state.loading) {
 
             return <BlankPage type="loading" message="加载中，请稍候..."/>
@@ -78,13 +82,12 @@ class Editor extends React.Component{
 
 const mapStateToProps = (state) => {
 
-  console.log(state)
-
-    return {
-        pageData: state.editor.pageData,
-        editorState: state.editor.editorState,
-        errors: state.editor.errors
-    }
+  return {
+      pageData: state.editor.pageData,
+      editorState: state.editor.editorState,
+      userinfo: state.user.userinfo,
+      errors: state.editor.errors
+  }
 
 }
 
