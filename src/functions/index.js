@@ -115,21 +115,26 @@ export const guid = () => {
  */
 export const formatTime = (timestamp, fmt = 'yyyy-MM-dd hh:mm:ss', ms = true) => {
 
-    let data = new Date()
-    data.setTime(ms ? timestamp : timestamp * 1000)
+    let date = new Date()
+
+    if (isNaN(timestamp)) {
+      date = new Date(timestamp)
+    } else {
+      date.setTime(ms ? timestamp : timestamp * 1000)
+    }
 
     var o = {
-      "M+" : data.getMonth() + 1,
-      "d+" : data.getDate(),
-      "h+" : data.getHours(),
-      "m+" : data.getMinutes(),
-      "s+" : data.getSeconds(),
-      "q+" : Math.floor((data.getMonth() + 3) / 3),
-      "S" : data.getMilliseconds()
+      "M+" : date.getMonth() + 1,
+      "d+" : date.getDate(),
+      "h+" : date.getHours(),
+      "m+" : date.getMinutes(),
+      "s+" : date.getSeconds(),
+      "q+" : Math.floor((date.getMonth() + 3) / 3),
+      "S" : date.getMilliseconds()
     }
 
     if (/(y+)/.test(fmt)) {
-      fmt = fmt.replace(RegExp.$1, (data.getFullYear() + "").substr(4 - RegExp.$1.length))
+      fmt = fmt.replace(RegExp.$1, (date.getFullYear() + "").substr(4 - RegExp.$1.length))
     }
 
     for (var k in o) {

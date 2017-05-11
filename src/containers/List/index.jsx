@@ -236,9 +236,8 @@ class List extends React.Component{
                         <div className={style.listSearcher}>
                             <button onClick={(e) => this.applyFilter()} className={style.listSearchBtn}><Icon type="search" /> 搜索</button>
                             <input
-                                onChange={(e) => this.changeFilter('title', e.currentTarget.value)}
-                                onKeyDown={(e) => {e.keyCode === 13 && this.applyFilter()}}
-                                value={title} type="text" className={style.listSearchInput} placeholder="按标题搜索"/>
+                                onKeyDown={(e) => {e.keyCode === 13 && this.changeFilter('title', e.currentTarget.value)}}
+                                type="text" className={style.listSearchInput} placeholder="按标题搜索"/>
                             <span onClick={(e) => this.changeFilter('title','')} className={style.btnClearSearchInput}>清空输入框</span>
                         </div>
                     </div>
@@ -260,7 +259,7 @@ class List extends React.Component{
                                         <a href={Config.CDNURL  + '/' + item.pathname} target="_blank">{item.title}</a>
                                     </div>
                                     <span className={style.itemType}>{item.layout === 'mobile' ? '移动端' : '桌面端'}</span>
-                                    <span className={style.itemDate}>{item.updateDate || item.createDate}</span>
+                                    <span className={style.itemDate}>{formatTime(item.updateDate || item.createDate)}</span>
                                     {userinfo && userinfo.uid &&   <div className={style.itemOptBtns}>
                                         <a onClick={ () => this.showConfirm(item.id) }><Icon type="delete" /> 删除</a>
                                     </div>}
