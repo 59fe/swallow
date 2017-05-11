@@ -14,7 +14,8 @@ const API = {
     'updata_poster' : SERVER + '/poster/update',
     'delete_poster' : SERVER + '/poster',
     'attention' : SERVER + '/poster/attention',
-    'get_current_user' : SERVER + '/user/current'
+    'get_current_user' : SERVER + '/user/current',
+    'go_logout'   : SERVER + '/user/logout', //用户登出
 }
 
 const IO_ERRORS = {
@@ -112,6 +113,10 @@ export const uploadFile = (file, option_in = {}) => {
     xhr.addEventListener("abort", option.onerror, false)
     xhr.send(fd)
 
+}
+
+export const goLogout = () => {
+    return fetch(API.go_logout)
 }
 
 export const checkExists = (path) => {

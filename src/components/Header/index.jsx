@@ -84,12 +84,16 @@ export default class Header extends Component {
             return (
                 <header className={style.appHeader}>
                     <div className={style.logo}></div>
-                    <div className={style.headerBtns}>
-                        {(userinfo && userinfo.uid) ?
-                          <a className={style.btnPublish} href="#/edit/new"><Icon type="plus" /> 新建海报</a> :
-                          <a className={style.btnPublish} href="//tms.dbike.me/#/login?referer=swallow"><Icon type="user" /> 登录</a>
-                        }
+                    {(userinfo && userinfo.uid) ?
+                    <div className={style.headerBtns}>      
+                        <span className={style.welcome}>欢迎您，{userinfo.uname}</span>
+                        <a className={style.btnLogout} onClick = {() => this.__logout()}><Icon type="logout" />  &nbsp; 退出</a>
+                        <a className={style.btnPublish} href="#/edit/new"><Icon type="plus" /> 新建海报</a>
+                    </div> :
+                    <div className={style.headerBtns}>      
+                        <a className={style.btnPublish} href="//tms.dbike.me/#/login?referer=swallow"><Icon type="user" /> 登录</a>
                     </div>
+                    }
                     <div className={style.caption}>
                         <h5>Swallow</h5>
                         <h6>海报活动页生成工具</h6>
@@ -244,6 +248,20 @@ export default class Header extends Component {
             window.__previewWindow__.document.write(html)
 
         }
+
+    }
+
+    __logout() {
+
+      Modal.confirm({
+        title: '你确定要退出吗？',
+        content: '',
+        onOk: function() {
+          IO.goLogout().then(() => {
+            location.reload()
+          })
+        }
+      })
 
     }
 
