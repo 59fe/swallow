@@ -128,7 +128,12 @@
 }
 .itemTitle{
   float: left;
-  width: 600px;
+  width: 500px;
+}
+.itemAuthor{
+  float: left;
+  width: 100px;
+  overflow: hidden;
 }
 .itemType{
   float: left;

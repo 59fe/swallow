@@ -245,6 +245,7 @@ class List extends React.Component{
                         <li className={style.listHead}>
                             {userinfo && userinfo.uid && <span className={style.attention}>关注</span>}
                             <span className={style.itemTitle}>标题</span>
+                            <span className={style.itemAuthor}>作者</span>
                             <span className={style.itemType}>类型</span>
                             <span className={style.itemDate}>修改时间</span>
                             {userinfo && userinfo.uid && <span className={style.itemOptBtns}>操作</span>}
@@ -258,6 +259,9 @@ class List extends React.Component{
                                     <div className={style.itemTitle} >
                                         <a href={Config.CDNURL  + '/' + item.pathname} target="_blank">{item.title}</a>
                                     </div>
+                                    <span className={style.itemAuthor} >
+                                        {item.author}
+                                    </span>
                                     <span className={style.itemType}>{item.layout === 'mobile' ? '移动端' : '桌面端'}</span>
                                     <span className={style.itemDate}>{formatTime(item.updateDate || item.createDate)}</span>
                                     {userinfo && userinfo.uid &&   <div className={style.itemOptBtns}>
