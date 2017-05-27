@@ -18,6 +18,7 @@ const initialState = {
         'elements': { // 页面元素
             'links': []
         },
+        'html': '',
         tempFiles: []
     },
     'editorState' : {

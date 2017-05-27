@@ -1,3 +1,4 @@
+import ArticleTpl from '../templates/article.tpl'
 import MobileTpl from '../templates/mobile.tpl'
 import PCTpl from '../templates/pc.tpl'
 
@@ -160,7 +161,9 @@ var _hmt = _hmt || [];
 
 export const buildTemplate = (data, type = 'mobile', release = false) => {
 
-    if (type === 'mobile') {
+    if (type === 'article') {
+        return ArticleTpl(data)
+    } else if (type === 'mobile') {
 
         data.parseStyle = parseRemStyle
         data.parseAppInnerLink = parseAppInnerLink

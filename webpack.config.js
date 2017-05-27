@@ -1,6 +1,7 @@
 var webpack = require('webpack'),
     autoprefixer = require('autoprefixer'),
     HtmlWebpackPlugin = require('html-webpack-plugin'),
+    CopyWebpackPlugin = require('copy-webpack-plugin'),
     path = require('path')
 
 module.exports = {
@@ -46,7 +47,14 @@ module.exports = {
             },
             {test: /\.json$/, loader: 'json-loader'},
             {test: /\.tpl$/, loader: 'html-tpl?minimize=false&collapseWhitespace=false'},
-            {test: /\.(png|jpg|gif)$/, loader: 'url-loader?limit=8192&name=[name]_[hash:5].[ext]'}
+            {test: /\.(png|jpg|gif)$/, loader: 'url-loader?limit=8192&name=[name]_[hash:5].[ext]'},
+            {
+                test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+                loader: "url-loader?limit=10000&mimetype=application/font-woff"
+            }, {
+                test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+                loader: "file-loader"
+            }
         ]
     },
     resolve: {
@@ -65,6 +73,9 @@ module.exports = {
         new webpack.DefinePlugin({
             'process.env': { NODE_ENV: JSON.stringify(process.env.NODE_ENV || 'development') }
         }),
+        new CopyWebpackPlugin([
+        { from: './../static', to: './../dist' },
+        ]),
         new HtmlWebpackPlugin({
             template: './index.html'
         })

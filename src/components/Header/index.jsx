@@ -56,10 +56,10 @@ export default class Header extends Component {
 
     render() {
 
-        let { pageData, editorState, userinfo, type } = this.props
-        type = type || 'editor'
+        let { pageData, editorState, userinfo, pageType } = this.props
+        pageType = pageType || 'editor'
 
-        if (type === 'editor') {
+        if (pageType === 'editor') {
 
             return (
                 <header className={style.appHeader}>
@@ -69,7 +69,7 @@ export default class Header extends Component {
                         <button className={style.btnClear} onClick={() => this.__clear()}><Icon type="reload" /> 清空</button>
                         <button className={style.btnSave} onClick={() => this.__save()}><Icon type="save" /> 保存</button>
                         <button className={style.btnPreview} onClick={() => this.__preview()}><Icon type="eye-o" /> 预览</button>
-                        <button className={style.btnLiveview + ' ' + (!pageData.isPublish && style.disabled)} onClick={() => this.__liveview()}><Icon type="caret-circle-o-right" /> 在线查看</button>
+                        <button className={style.btnLiveview + ' ' + (!pageData.isPublish && style.disabled)} onClick={() => this.__liveView()}><Icon type="caret-circle-o-right" /> 在线查看</button>
                         <button className={style.btnPublish} onClick={() => this.__publish()}><Icon type="check" /> 发布</button>
                     </div>
                     <div className={style.caption}>
@@ -88,7 +88,8 @@ export default class Header extends Component {
                     <div className={style.headerBtns}>      
                         <span className={style.welcome}>欢迎您，{userinfo.uname}</span>
                         <a className={style.btnLogout} onClick = {() => this.__logout()}><Icon type="logout" />  &nbsp; 退出</a>
-                        <a className={style.btnPublish} href="#/edit/new"><Icon type="plus" /> 新建海报</a>
+                        <a className={style.btnPublish} href="#/edit/newposter"><Icon type="plus" /> 新建海报</a>
+                        <a className={style.btnPublish} href="#/edit/newarticle"><Icon type="plus" /> 新建文章</a>
                     </div> :
                     <div className={style.headerBtns}>      
                         <a className={style.btnPublish} href="//tms.dbike.me/#/login?referer=swallow"><Icon type="user" /> 登录</a>
@@ -107,21 +108,26 @@ export default class Header extends Component {
 
     __save() {
 
-        let actions = this.props.actions
+        let { actions, type } = this.props
 
         let data = JSON.parse(JSON.stringify(this.props.pageData))
-        let result = validatePageData(data)
+        let validateResult = validatePageData(data)
+        let { layout } = data
         let updatedBackground = []
 
-        data.html = buildTemplate(data, data.layout, true)
+        if (type === 2) {
+            layout = 'article'
+            validateResult = true
+        }
 
-        if (result === true) {
+        data.html = buildTemplate(this.props.pageData, layout)
+        data.type = type
+
+        if (validateResult === true) {
 
             let now = new Date().getTime()
 
             if (data.id) {
-
-                console.log('更新海报')
 
                 data = { ...data }
                 data.elements = JSON.stringify(data.elements)
@@ -144,19 +150,19 @@ export default class Header extends Component {
 
             } else {
 
-                console.log('保存海报')
-
                 data = { ...data }
                 data.elements = JSON.stringify(data.elements)
                 updatedBackground = data.background.map((item) => {
                     return { ...item, url: item.releaseUrl }
                 })
+                data.pathname = data.title + '_' + formatTime(new Date().getTime(), 'yyyyMMddhhmmss')
                 data.background = JSON.stringify(updatedBackground)
 
                 IO.savePoster(data).then((res) => {
                     actions.updatePageData({
                         id: res.id,
                         background: updatedBackground,
+                        pathname: data.pathname,
                         lastSaveTime: now,
                         tempFiles: []
                     })
@@ -172,30 +178,37 @@ export default class Header extends Component {
 
         } else {
             showNotification('请完善必填字段')
-            actions.toggleError(result)
+            actions.toggleError(validateResult)
         }
 
     }
 
     __publish() {
 
-        let actions = this.props.actions
+        let { actions, type } = this.props
 
         let now = new Date().getTime()
         let data = JSON.parse(JSON.stringify(this.props.pageData))
-        let result = validatePageData(data)
+        let { layout } = data
+        let validateResult = validatePageData(data)
         let updatedBackground = []
 
-        data.html = buildTemplate(data, data.layout, true)
+        if (type === 2) {
+            layout = 'article'
+            validateResult = true
+        }
+
+        data.html = buildTemplate(data, layout, true)
+        data.type = type
 
         if (!data.id) {
             showNotification('发布前请先保存！')
             return false
         }
 
-        if (result !== true) {
+        if (validateResult !== true) {
             showNotification('请完善必填字段')
-            actions.toggleError(result)
+            actions.toggleError(validateResult)
             return false
         }
 
@@ -223,7 +236,7 @@ export default class Header extends Component {
 
     }
 
-    __liveview() {
+    __liveView() {
 
         let { pageData } = this.props
         showPubModal(pageData.pathname, '活动页网址:')
@@ -232,21 +245,23 @@ export default class Header extends Component {
 
     __preview() {
 
-        let deviceTtype = this.props.pageData.layout
-        let html = buildTemplate(this.props.pageData, deviceTtype)
-        //this.props.actions.fillHTML(html)
+        let { type } = this.props
+        let { layout } = this.props.pageData
 
-        if (deviceTtype === 'mobile') {
+        if (type === 2) {
+            layout = 'article'
+        }
+
+        let html = buildTemplate(this.props.pageData, layout)
+
+        if (layout === 'mobile') {
             ReactDOM.render(<Previewer html={html}/>, document.getElementById('mobilePreview'))
         } else {
-
             if (!window.__previewWindow__ || window.__previewWindow__.closed) {
                 window.__previewWindow__ = window.open()
             }
-
             window.__previewWindow__.focus()
             window.__previewWindow__.document.write(html)
-
         }
 
     }

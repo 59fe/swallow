@@ -1,0 +1,23 @@
+.article{
+    height: 100%;
+    overflow: auto;
+    background-color: #fff;
+}
+.title{
+    height: 100px;
+    padding: 20px 0;
+    input{
+        display: block;
+        width: 100%;
+        height: 60px;
+        color: #666;
+        font-size: 24px;
+        border: none;
+        border-bottom: 1px solid #ccc;
+    }
+}
+.container{
+    width: 100%;
+    max-width: 1024px;
+    margin: 0 auto 80px auto;
+}

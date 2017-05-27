@@ -22,7 +22,7 @@ class List extends React.Component{
             posters: [],
             filter: {
                 page: 0,
-                type: 'all',
+                type: 1,
                 title: '',
                 attention:''
             }
@@ -37,7 +37,7 @@ class List extends React.Component{
     loadPosters(props) {
 
         const page = props.page || 0
-        const type = props.type || 'all'
+        const type = props.type || 1
         const title = props.title || ''
         const attention = props.attention || ''
         const filter = { page, type, title, attention }
@@ -49,9 +49,10 @@ class List extends React.Component{
         })
 
         IO.getPosters({
-            layout: type === 'all' ? '' : type,
+            layout: '',
             index: page,
             title: title,
+            type: type,
             attention: attention
         }).then((data) => {
             let posters = data.list
@@ -132,29 +133,25 @@ class List extends React.Component{
     }
 
     //关注和取消关注状态
-    attentionStatus( id,attention ) {
+    attentionStatus(id,attention) {
 
-        if(attention){
+        if (attention) {
           attention = 0
-        }else{
+        } else {
           attention = 1
         }
 
-        IO.Attention( id, attention ).then((data) => {
-
+        IO.Attention(id, attention).then((data) => {
           if(data){
-
             this.props.actions.updatePoster({
               'id': id,
               'item': {
                 'attention': attention
               }
             })
-
           }
-
         }).catch((error) => {
-
+            //
         })
     }
 
@@ -162,25 +159,23 @@ class List extends React.Component{
     listPages(page, type, attention){
 
       IO.getPosters({
-          layout: type === 'all' ? '' : type,
+          layout: '',
           index: page - 1,
           title: '',
+          type: type,
           attention: attention
       }).then((data) => {
-
           this.props.actions.cacheListData({
             'items': data.list
           })
-
       })
-
 
     }
 
     render() {
 
         const page = this.state.filter.page || 0
-        const type = this.state.filter.type || 'all'
+        const type = this.state.filter.type || 1
         const title = this.state.filter.title || ''
         const attention = this.state.filter.attention || ''
         const { posters, loading, error, total } = this.state
@@ -203,7 +198,7 @@ class List extends React.Component{
         if (error) {
             return (
                 <div className={style.listPage}>
-                    <Header type="list"/>
+                    <Header pageType="list"/>
                     <div className={style.pageContainer}>
                         <div className={style.listError}></div>
                     </div>
@@ -214,7 +209,7 @@ class List extends React.Component{
         if (loading) {
             return (
                 <div className={style.listPage}>
-                    <Header type="list"/>
+                    <Header pageType="list"/>
                     <div className={style.pageContainer}>
                         <div className={style.listLoading}></div>
                     </div>
@@ -224,13 +219,12 @@ class List extends React.Component{
 
         return (
             <div className={style.listPage}>
-                <Header userinfo={this.props.userinfo} type="list"/>
+                <Header userinfo={this.props.userinfo} pageType="list"/>
                 <div className={style.pageContainer}>
                     <div className={style.listFilter}>
                         <div className={style.listTypes}>
-                            <a className={type === 'all' && style.active} onClick = { () => this.changeFilter('type','all') }  >全部</a>
-                            <a className={type === 'mobile' && style.active} onClick = { () => this.changeFilter('type','mobile') }  >移动端</a>
-                            <a className={type === 'pc' && style.active} onClick = { () => this.changeFilter('type','pc') }  >桌面端</a>
+                            <a className={type === 1 && style.active} onClick = { () => this.changeFilter('type', 1) }>海报</a>
+                            <a className={type === 2 && style.active} onClick = { () => this.changeFilter('type', 2) }>文章</a>
                         </div>
                         {userinfo && userinfo.uid && <div className={style.attentionType}>关注：<Switch defaultChecked={ attention ? true :false}  onChange={ onChange } /></div>}
                         <div className={style.listSearcher}>
@@ -262,7 +256,7 @@ class List extends React.Component{
                                     <span className={style.itemAuthor} >
                                         {item.author}
                                     </span>
-                                    <span className={style.itemType}>{item.layout === 'mobile' ? '移动端' : '桌面端'}</span>
+                                    <span className={style.itemType}>{item.type === 1 ? '海报' : '文章'}</span>
                                     <span className={style.itemDate}>{formatTime(item.updateDate || item.createDate)}</span>
                                     {userinfo && userinfo.uid &&   <div className={style.itemOptBtns}>
                                         <a onClick={ () => this.showConfirm(item.id) }><Icon type="delete" /> 删除</a>
