@@ -47,8 +47,25 @@ b, strong {
 iframe::-webkit-scrollbar {
     width: 0;
 }
-body [class="ant-modal-mask"] {
-    z-index: 999;
+:global {
+    body .ant-modal-mask {
+        z-index: 999;
+    }
+    body .anticon-editor_image_masker {
+        display: none;
+    }
+    .uploadingImagies{
+        img{
+            display: block;
+            max-width: 100%;
+            height: auto;
+        }
+    }
+    .DraftEditor-content{
+        audio{
+            width: 100%;
+        }
+    }
 }
 #root{
     height: 100vh;
