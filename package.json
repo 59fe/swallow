@@ -33,7 +33,7 @@
     "react": "^15.4.2",
     "react-dom": "^15.4.2",
     "react-draggable": "^2.1.2",
-    "react-lz-editor": "^0.10.15",
+    "react-lz-editor": "^0.10.17",
     "react-redux": "^4.4.0",
     "react-router": "^2.0.0",
     "react-router-redux": "^4.0.0",
