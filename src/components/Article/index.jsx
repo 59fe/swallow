@@ -50,7 +50,8 @@ export default class Article extends React.Component {
             <div className={style.article}>
                 <div className={style.container}>
                     <div className={style.title}>
-                        <input value={title} onChange={::this.inputTitle} type="text" maxLength={50} placeholder="在此输入标题"/>
+                        <input value={title} onChange={::this.inputTitle} type="text" maxLength={50} placeholder="在此输入活动标题"/>
+                        <span>提示：活动标题将显示在APP或者微信的顶栏</span>
                     </div>
                     <LzEditor
                         active={true}

@@ -162,7 +162,10 @@ var _hmt = _hmt || [];
 export const buildTemplate = (data, type = 'mobile', release = false) => {
 
     if (type === 'article') {
-        return ArticleTpl(data)
+        let html = data.html.split('<!--EDITOR_CONTENT-->')
+        html = html.length > 1 ? html[1] : data.html
+        console.log(ArticleTpl({ ...data, html}))
+        return ArticleTpl({ ...data, html})
     } else if (type === 'mobile') {
 
         data.parseStyle = parseRemStyle

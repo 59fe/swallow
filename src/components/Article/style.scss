@@ -1,10 +1,9 @@
 .article{
-    height: 100%;
+    height: calc(100% - 70px);
     overflow: auto;
     background-color: #fff;
 }
 .title{
-    height: 100px;
     padding: 20px 0;
     input{
         display: block;
@@ -14,6 +13,12 @@
         font-size: 24px;
         border: none;
         border-bottom: 1px solid #ccc;
+    }
+    span{
+        display: block;
+        color: #999;
+        font-size: 14px;
+        line-height: 40px;
     }
 }
 .container{
