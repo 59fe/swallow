@@ -194,6 +194,6 @@ export const configJson = () => {
 
     return {
       "APIURL": "http://" + location.host,
-      "CDNURL": "http://fecdn.59store.com/activity"
+      "CDNURL": "http://fecdn.qeebike.com/activity"
     }
 }

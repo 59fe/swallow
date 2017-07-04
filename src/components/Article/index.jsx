@@ -10,9 +10,9 @@ const uploadConfig = {
     },
     QINIU_VIDEO_TOKEN_URL: "/api/qiniu_token", //请求媒体资源的token
     QINIU_FILE_TOKEN_URL: "/api/qiniu_token", //其他资源的token的获取
-    QINIU_IMG_DOMAIN_URL: "http://fecdn.59store.com/", //图片文件地址的前缀
-    QINIU_DOMAIN_VIDEO_URL: "http://fecdn.59store.com/", //视频文件地址的前缀
-    QINIU_DOMAIN_FILE_URL: "http://fecdn.59store.com/" //其他文件地址前缀
+    QINIU_IMG_DOMAIN_URL: "http://fecdn.qeebike.com/", //图片文件地址的前缀
+    QINIU_DOMAIN_VIDEO_URL: "http://fecdn.qeebike.com/", //视频文件地址的前缀
+    QINIU_DOMAIN_FILE_URL: "http://fecdn.qeebike.com/" //其他文件地址前缀
 }
 
 export default class Article extends React.Component {
