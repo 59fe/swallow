@@ -17,7 +17,6 @@ body{
     overflow: auto;
 }
 .container{
-    margin: 20px;
     overflow: hidden;
     word-wrap: break-word;
     word-break: break-all;

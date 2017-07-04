@@ -251,7 +251,7 @@ class List extends React.Component{
                                         <Icon onClick={ () => this.attentionStatus( item.id, item.attention)} type={ item.attention ? 'star' : 'star-o'} />
                                     </div>}
                                     <div className={style.itemTitle} >
-                                        <a href={Config.CDNURL  + '/' + item.pathname} target="_blank">{item.title}</a>
+                                        <a href={Config.CDNURL  + (item.type === 2 ? 'article' : 'activity') + '/' + item.pathname} target="_blank">{item.title}</a>
                                     </div>
                                     <span className={style.itemAuthor} >
                                         {item.author}

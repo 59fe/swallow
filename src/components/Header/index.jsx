@@ -33,18 +33,25 @@ const copyPosterUrl = () => {
 
 }
 
-const showPubModal = (pathname, title = "发布成功") => {
+const showPubModal = (pathname, type, title = "发布成功") => {
 
     let now = new Date().getTime()
+    let urlPrefix = config.CDNURL
+    if (type === 2) {
+        urlPrefix += 'article'
+    } else {
+        urlPrefix += 'activity'
+    }
+    let url = urlPrefix + "/" + encodeURIComponent(pathname) + '?t=' + now
 
     Modal.success({
         'title': title,
         'width': 620,
         'content': (
             <div className={style.copierBox}>
-                <input className={style.publicUrl} id="poster-url-field" defaultValue={config.CDNURL + "/" + pathname + '?t=' + now} />
+                <input className={style.publicUrl} id="poster-url-field" defaultValue={url} />
                 <a className={style.btnCopyUrl} onClick={() => copyPosterUrl()} href="javascript:void(0);" id="btn-copy-url">复制地址</a>
-                <a className={style.btnViewUrl} href={config.CDNURL + "/" + pathname + '?t=' + now} target="_blank">立即查看</a>
+                <a className={style.btnViewUrl} href={url} target="_blank">立即查看</a>
             </div>
         ),
         'okText': '好的'
@@ -231,7 +238,7 @@ export default class Header extends Component {
                 lastSaveTime: now,
                 tempFiles: []
             })
-            showPubModal(pathname)
+            showPubModal(pathname, type)
         })
 
     }
@@ -239,7 +246,7 @@ export default class Header extends Component {
     __liveView() {
 
         let { pageData } = this.props
-        showPubModal(pageData.pathname, '活动页网址:')
+        showPubModal(pageData.pathname, pageData.type, '活动页网址:')
 
     }
 
