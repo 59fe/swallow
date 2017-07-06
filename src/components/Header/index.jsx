@@ -45,15 +45,13 @@ const showPubModal = (pathname, type, title = "发布成功") => {
     let url = urlPrefix + "/" + encodeURIComponent(pathname) + '?t=' + now
 
     IO.fetch("/api/short_url", {
-        source: 3271760578,
+        source: 1299960161,
         url_long: url
     }).catch((res) => {
 
-        console.log(res)
-
         let convertedUrl = url
-        if (res[0] && res[0].url_short) {
-            convertedUrl = res[0].url_short
+        if (res.urls && res.urls[0] && res.urls[0].url_short) {
+            convertedUrl = res.urls[0].url_short
         }
 
         Modal.success({

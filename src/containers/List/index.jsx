@@ -10,21 +10,31 @@ import { formatTime, JSON2URL, getHashParam } from '../../functions'
 import * as IO from '../../io'
 import * as Config from '../../config.json'
 
+
+const copyPosterUrl = () => {
+
+    document.getElementById('poster-url-field').select()
+    if (document.execCommand('Copy', false, null)) {
+        message.success('复制成功！')
+    } else {
+        message.error('复制失败，请手动复制')
+    }
+
+}
+
 const showViewModal = (url, title) => {
 
     let now = new Date().getTime()
     url = url + '?t=' + now
 
     IO.fetch("/api/short_url", {
-        source: 3271760578,
+        source: 1299960161,
         url_long: url
     }).catch((res) => {
-
         let convertedUrl = url
-        if (res[0] && res[0].url_short) {
-            convertedUrl = res[0].url_short
+        if (res.urls && res.urls[0] && res.urls[0].url_short) {
+            convertedUrl = res.urls[0].url_short
         }
-
         Modal.success({
             'title': '查看[' + title + ']',
             'width': 620,
@@ -37,8 +47,6 @@ const showViewModal = (url, title) => {
             ),
             'okText': '好的'
         })
-
-
     })
 
 }
