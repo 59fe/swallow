@@ -22,7 +22,7 @@ const IO_ERRORS = {
     '0': '请求超时'
 }
 
-const fetch = (url, data = {}, method = 'GET', timeout = 5000) => {
+export const fetch = (url, data = {}, method = 'GET', timeout = 5000) => {
 
     return new Promise((resolve, reject) => {
 

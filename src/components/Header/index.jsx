@@ -44,17 +44,32 @@ const showPubModal = (pathname, type, title = "发布成功") => {
     }
     let url = urlPrefix + "/" + encodeURIComponent(pathname) + '?t=' + now
 
-    Modal.success({
-        'title': title,
-        'width': 620,
-        'content': (
-            <div className={style.copierBox}>
-                <input className={style.publicUrl} id="poster-url-field" defaultValue={url} />
-                <a className={style.btnCopyUrl} onClick={() => copyPosterUrl()} href="javascript:void(0);" id="btn-copy-url">复制地址</a>
-                <a className={style.btnViewUrl} href={url} target="_blank">立即查看</a>
-            </div>
-        ),
-        'okText': '好的'
+    IO.fetch("/api/short_url", {
+        source: 3271760578,
+        url_long: url
+    }).catch((res) => {
+
+        console.log(res)
+
+        let convertedUrl = url
+        if (res[0] && res[0].url_short) {
+            convertedUrl = res[0].url_short
+        }
+
+        Modal.success({
+            'title': title,
+            'width': 620,
+            'content': (
+                <div className={style.copierBox}>
+                    <input className={style.publicUrl} id="poster-url-field" defaultValue={convertedUrl} />
+                    <a className={style.btnCopyUrl} onClick={() => copyPosterUrl()} href="javascript:void(0);" id="btn-copy-url">复制地址</a>
+                    <a className={style.btnViewUrl} href={convertedUrl} target="_blank">立即查看</a>
+                </div>
+            ),
+            'okText': '好的'
+        })
+
+
     })
 
 }

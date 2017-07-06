@@ -10,6 +10,39 @@ import { formatTime, JSON2URL, getHashParam } from '../../functions'
 import * as IO from '../../io'
 import * as Config from '../../config.json'
 
+const showViewModal = (url, title) => {
+
+    let now = new Date().getTime()
+    url = url + '?t=' + now
+
+    IO.fetch("/api/short_url", {
+        source: 3271760578,
+        url_long: url
+    }).catch((res) => {
+
+        let convertedUrl = url
+        if (res[0] && res[0].url_short) {
+            convertedUrl = res[0].url_short
+        }
+
+        Modal.success({
+            'title': '查看[' + title + ']',
+            'width': 620,
+            'content': (
+                <div className={style.copierBox}>
+                    <input className={style.publicUrl} id="poster-url-field" defaultValue={convertedUrl} />
+                    <a className={style.btnCopyUrl} onClick={() => copyPosterUrl()} href="javascript:void(0);" id="btn-copy-url">复制地址</a>
+                    <a className={style.btnViewUrl} href={convertedUrl} target="_blank">立即查看</a>
+                </div>
+            ),
+            'okText': '好的'
+        })
+
+
+    })
+
+}
+
 class List extends React.Component{
 
     constructor(props) {
@@ -249,16 +282,17 @@ class List extends React.Component{
                             <span className={style.itemAuthor}>作者</span>
                             <span className={style.itemType}>类型</span>
                             <span className={style.itemDate}>修改时间</span>
-                            {userinfo && userinfo.uid && <span className={style.itemOptBtns}>操作</span>}
+                            <span className={style.itemOptBtns}>操作</span>
                         </li>
                         {data.map((item, index) => {
+                            let url = Config.CDNURL  + (item.type === 2 ? 'article' : 'activity') + '/' + item.pathname
                             return (
                                 <li key={index + 1}>
                                     {userinfo && userinfo.uid && <div className={style.attention} >
                                         <Icon onClick={ () => this.attentionStatus( item.id, item.attention)} type={ item.attention ? 'star' : 'star-o'} />
                                     </div>}
                                     <div className={style.itemTitle} >
-                                        <a href={Config.CDNURL  + (item.type === 2 ? 'article' : 'activity') + '/' + item.pathname} target="_blank">{item.title}</a>
+                                        <a href={url} target="_blank">{item.title}</a>
                                     </div>
                                     <span className={style.itemAuthor} >
                                         {item.author}
@@ -271,6 +305,9 @@ class List extends React.Component{
                                     {userinfo && userinfo.uid && <div className={style.itemOptBtns}>
                                         <a href={'#/edit/' + item.id} target="_blank"><Icon type="edit" /> 修改</a>
                                     </div>}
+                                    <div className={style.itemOptBtns}>
+                                        <a href="javascript:void(0);" onClick={() => showViewModal(url, item.title)}>查看</a>
+                                    </div>
                                 </li>
                             )
                         })}
