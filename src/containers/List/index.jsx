@@ -6,7 +6,7 @@ import classNames from 'classnames'
 import { Table, Icon, Modal, Pagination, message, Switch } from 'antd'
 import style from './style.scss'
 import Header from '../../components/Header'
-import { formatTime, JSON2URL } from '../../functions'
+import { formatTime, JSON2URL, getHashParam } from '../../functions'
 import * as IO from '../../io'
 import * as Config from '../../config.json'
 
@@ -29,8 +29,15 @@ class List extends React.Component{
         }
     }
 
-    componentWillMount() {
-        this.loadPosters(this.props.location.query)
+    componentDidMount () {
+
+        let type = getHashParam('type')
+        if (type === 'article') {
+            this.changeFilter('type', 2)
+        } else {
+            this.changeFilter('type', 1)
+        }
+
     }
 
     //请求列表数据
@@ -223,8 +230,8 @@ class List extends React.Component{
                 <div className={style.pageContainer}>
                     <div className={style.listFilter}>
                         <div className={style.listTypes}>
-                            <a className={type === 1 && style.active} onClick = { () => this.changeFilter('type', 1) }>海报</a>
-                            <a className={type === 2 && style.active} onClick = { () => this.changeFilter('type', 2) }>文章</a>
+                            <a className={type === 1 && style.active} href="/#/list?type=activity" onClick={() => this.changeFilter('type', 1)}>海报</a>
+                            <a className={type === 2 && style.active} href="/#/list?type=article" onClick={() => this.changeFilter('type', 2)}>文章</a>
                         </div>
                         {userinfo && userinfo.uid && <div className={style.attentionType}>关注：<Switch defaultChecked={ attention ? true :false}  onChange={ onChange } /></div>}
                         <div className={style.listSearcher}>

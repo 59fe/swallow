@@ -111,6 +111,14 @@ export const guid = () => {
 
 }
 
+export const getHashParam = (param, url = window.location.hash) => {
+
+  let reg = new RegExp("(^|/?|&)" + param + "=([^&]*)(&|$)")
+  let r = url.substr(1).match(reg)
+  return r != null ? unescape(r[2]) : null
+
+}
+
 /**
  * 时间格式化
  */
