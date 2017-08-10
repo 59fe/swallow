@@ -176,7 +176,7 @@ export default class Header extends Component {
                     return { ...item, url: item.releaseUrl }
                 })
 
-                data.pathname = formatTime(new Date().getTime(), 'yyyyMMddhhmmss') + '_' + (10000 + Math.round(Math.random() * 50000))
+                data.pathname = formatTime(new Date().getTime(), 'yyyyMMddhhmmss') + '_' + Math.random().toString(36).substring(6)
                 data.background = JSON.stringify(updatedBackground)
 
                 IO.savePoster(data).then((res) => {
