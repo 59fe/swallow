@@ -175,7 +175,8 @@ export default class Header extends Component {
                 updatedBackground = data.background.map((item) => {
                     return { ...item, url: item.releaseUrl }
                 })
-                data.pathname = data.title + '_' + formatTime(new Date().getTime(), 'yyyyMMddhhmmss')
+
+                data.pathname = formatTime(new Date().getTime(), 'yyyyMMddhhmmss') + '_' + (10000 + Math.round(Math.random() * 50000))
                 data.background = JSON.stringify(updatedBackground)
 
                 IO.savePoster(data).then((res) => {

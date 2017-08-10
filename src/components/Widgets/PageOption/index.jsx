@@ -75,8 +75,6 @@ export default class LinkOption extends React.Component{
                     <div className={style.groupLine}></div>
                     <label className={style.opitonLabel}><span className={style.bgRed}>*</span>页面标题</label>
                     <input data-error={errors.title} type="text" onChange={(e) => this.__updatePageData('title', e.currentTarget.value)} defaultValue={pageData.title} className={style.textOption}/>
-                    <label className={style.opitonLabel}><span className={style.bgRed}>*</span>访问路径(英文和数字的组合)</label>
-                    <input data-error={errors.pathname} disabled={pageData.id ? true : false} type="text" onChange={(e) => this.__updatePageData('pathname', e.currentTarget.value)} defaultValue={pageData.pathname} className={style.textOption}/>
                     <div className={style.groupLine}></div>
                     <label className={style.opitonLabel}>背景图片</label>
                     {pageData.background.map(createBackgroundSelector)}

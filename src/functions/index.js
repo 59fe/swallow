@@ -72,10 +72,10 @@ export const validatePageData = (data) => {
             errors.title =  '页面标题不能为空'
         }
 
-        if (data.pathname === null || data.pathname.trim().length === 0) {
-            has_error = true
-            errors.pathname = '访问路径不能为空'
-        }
+        // if (data.pathname === null || data.pathname.trim().length === 0) {
+        //     has_error = true
+        //     errors.pathname = '访问路径不能为空'
+        // }
 
         return has_error ? errors : true
 
