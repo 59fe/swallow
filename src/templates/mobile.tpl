@@ -42,7 +42,7 @@ body{
     </div>
 </div>
 <script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
-<script src="http://jssdk.wx.59store.com/js-sdk.js"></script>
+<script src="http://wx.qeebike.com/wechat/jsconfig?mpName=qeebike&url=http%3A%2F%2Ffecdn.qeebike.com"></script>
 <script>
 ~function() {
 
@@ -115,7 +115,7 @@ body{
     if (browser === 'APP' && typeof HXSJSBridge !== 'undefined') {
 
         HXSJSBridge.setNavigationButton({
-            type: 'share',
+            type: null,
             title: null,
             image: null,
             link: null
