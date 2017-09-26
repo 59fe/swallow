@@ -14,7 +14,7 @@ const initialState = {
         'shareImage': '', //微信分享图标地址 varchar
         'shareTitle': '', //微信分享标题 varchar
         'shareDesc': '', //微信分享描述 varchar
-        'statistics': '', //百度统计代码 text
+        'statistics': '', //统计代码 text
         'elements': { // 页面元素
             'links': []
         },

@@ -90,7 +90,7 @@ export default class LinkOption extends React.Component{
                     <input data-if-layout="mobile" type="text" defaultValue={pageData.shareTitle} onChange={(e) => this.__updatePageData('shareTitle', e.currentTarget.value)} className={style.textOption}/>
                     <label data-if-layout="mobile" className={style.opitonLabel}>分享描述</label>
                     <textarea data-if-layout="mobile" defaultValue={pageData.shareDesc} onChange={(e) => this.__updatePageData('shareDesc', e.currentTarget.value)} className={[style.textOption, style.textarea].join(' ')}></textarea>
-                    <label className={style.opitonLabel}>百度统计</label>
+                    <label className={style.opitonLabel}>启用访问统计</label>
                     <Switch defaultChecked={pageData.statistics === '1'} onChange={(checked) => this.__updatePageData('statistics', checked ? '1' : '0')} />
                 </div>
             </div>

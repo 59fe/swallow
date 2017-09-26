@@ -156,14 +156,10 @@ export const formatTime = (timestamp, fmt = 'yyyy-MM-dd hh:mm:ss', ms = true) =>
 
 }
 
-const statisticsCode = `<script>
-var _hmt = _hmt || [];
-(function() {
-  var hm = document.createElement("script");
-  hm.src = "//hm.baidu.com/hm.js?d4e872714ee07ec415d4c14cc4a4c172";
-  var s = document.getElementsByTagName("script")[0];
-  s.parentNode.insertBefore(hm, s);
-})();
+const statisticsCode = `
+<script type="text/javascript">
+    var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+    document.write(unescape("%3Cspan id='cnzz_stat_icon_1264435303'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s13.cnzz.com/z_stat.php%3Fid%3D1264435303' type='text/javascript'%3E%3C/script%3E"));
 </script>
 `
 
