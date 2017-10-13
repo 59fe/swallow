@@ -156,12 +156,7 @@ export const formatTime = (timestamp, fmt = 'yyyy-MM-dd hh:mm:ss', ms = true) =>
 
 }
 
-const statisticsCode = `
-<script type="text/javascript">
-    var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");
-    document.write(unescape("%3Cspan id='cnzz_stat_icon_1264435303'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s13.cnzz.com/z_stat.php%3Fid%3D1264435303' type='text/javascript'%3E%3C/script%3E"));
-</script>
-`
+const statisticsCode = '<script src="https://s19.cnzz.com/z_stat.php?id=1264762239&web_id=1264762239" language="JavaScript"></script>'
 
 export const buildTemplate = (data, type = 'mobile', release = false) => {
 
