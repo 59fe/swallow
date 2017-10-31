@@ -29,6 +29,13 @@ body{
     z-index: 889;
     left: 50%;
 }
+.statistics{
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    opacity: 0;
+    pointer-events: none;
+}
 </style>
 </head>
 <body>
@@ -36,6 +43,8 @@ body{
     <%background.forEach(function(img, index) {%><div class="background-element" style="top:<%=getTop(background, index)%>px;height:<%=img.height%>px;background-image:url(<%=getBackgroundImageUrl(img, release)%>);"></div><% top += img.top;})%>
     <% elements.links.forEach(function(link){ %><a class="link-element" style="<%=parseStyle(link)%>" href="<%=link.url%>" target="<%=link.target%>"></a><% })%>
 </div>
+<div class="statistics">
 <%=statisticsCode%>   
+</div>
 </body>
 </html>

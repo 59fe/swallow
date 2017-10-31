@@ -32,6 +32,13 @@ body{
     position: absolute;
     z-index: 889;
 }
+.statistics{
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    opacity: 0;
+    pointer-events: none;
+}
 </style>
 </head>
 <body>
@@ -41,8 +48,7 @@ body{
         <%elements.links.forEach(function(link){ %><a class="link-element" style="<%=parseStyle(link)%>" href="<%=parseAppInnerLink(link.url)%>" target="<%=link.target%>"></a><% })%>
     </div>
 </div>
-<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
-<script src="http://wx.qeebike.com/wechat/jsconfig?mpName=qeebike&url=http%3A%2F%2Ffecdn.qeebike.com"></script>
+<script src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
 <script>
 ~function() {
 
@@ -131,22 +137,28 @@ body{
 
     } else if (browser === 'WEIXIN' && typeof wx !== 'undefined') {
 
-        wx.ready(function() {
+        var script = document.createElement('script');
+        script.src = 'http://wx.qeebike.com/wechat/jsconfig?mpName=qeebike&url=' + encodeURIComponent(location.href.split('#')[0])
+        document.body.appendChild(script)
 
-            wx.onMenuShareAppMessage({
-                title: '<%=shareTitle%>' || document.title,
-                desc: '<%=shareDesc%>' ? '<%=shareDesc%>'.substr(0, 45) : '暂无介绍',
-                imgUrl: '<%=shareImage%>',
-                link: location.href.replace('token=' + token, '')
+        setTimeout(function() {
+            wx.ready(function() {
+
+                wx.onMenuShareAppMessage({
+                    title: '<%=shareTitle%>' || document.title,
+                    desc: '<%=shareDesc%>' ? '<%=shareDesc%>'.substr(0, 45) : '暂无介绍',
+                    imgUrl: '<%=shareImage%>',
+                    link: location.href.replace('token=' + token, '')
+                });
+
+                wx.onMenuShareTimeline({
+                    title: '<%=shareTitle%>' || document.title,
+                    imgUrl: '<%=shareImage%>',
+                    link: location.href.replace('token=' + token, '')
+                });
+
             });
-
-            wx.onMenuShareTimeline({
-                title: '<%=shareTitle%>' || document.title,
-                imgUrl: '<%=shareImage%>',
-                link: location.href.replace('token=' + token, '')
-            });
-
-        });
+        }, 50)
 
     }
 
@@ -165,6 +177,8 @@ body{
 
 }();
 </script>
+<div class="statistics">
 <%=statisticsCode%>
+</div>
 </body>
 </html>
