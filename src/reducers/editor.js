@@ -11,7 +11,7 @@ const initialState = {
         'pageHeight': 0,
         'background': [],
         'backgroundColor': '#ffffff', //背景颜色 varchar
-        'shareImage': '', //微信分享图标地址 varchar
+        'shareImage': 'http://fecdn.qeebike.com/repo/qiji-gala/common/images/qidian_logo.png', //微信分享图标地址 varchar
         'shareTitle': '', //微信分享标题 varchar
         'shareDesc': '', //微信分享描述 varchar
         'statistics': '', //统计代码 text
