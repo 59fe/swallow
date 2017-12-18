@@ -45,7 +45,7 @@ body{
 <div class="container">
     <div class="elements">
         <%background.forEach(function(img) {%><img src="<%=getBackgroundImageUrl(img, release)%>" alt="<%=img.name%>" class="background-image"><%})%>
-        <%elements.links.forEach(function(link){ %><a class="link-element" style="<%=parseStyle(link)%>" href="<%=parseAppInnerLink(link.url)%>" target="<%=link.target%>"></a><% })%>
+        <%elements.links.forEach(function(link){ %><a class="link-element" style="<%=parseStyle(link)%>" href="<%=link.url%>" data-href="<%=link.url%>" target="<%=link.target%>"></a><% })%>
     </div>
 </div>
 <script src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
@@ -56,49 +56,53 @@ body{
     var browser = null;
     var ua = navigator.userAgent.toLowerCase();
     var links = document.querySelectorAll('a');
-    var appLinks = document.querySelectorAll('[data-app-link]')
-    var appLinkFuncs = {
-        '优惠券页面': function() {
-            HXSJSBridge.pushMyCouponView()
-        },
-        '订单列表页面': function() {
-            HXSJSBridge.openOrderListView(4)
-        },
-        '信用钱包页面': function() {
-            HXSJSBridge.openCreditPayView()
-        },
-        '花不完页面': function() {
-            HXSJSBridge.openCreditCardView()
-        }
+
+    var appLinkMap = {
+        PAGE_RECHARGE: "qeebike://wallet/recharge",
+        PAGE_COUPONS: "qeebike://personal/coupon",
+        PAGE_WALLET: "qeebike://personal/my_wallet",
+        PAGE_INVITE: "qeebike://personal/invite_friend"
     }
 
-    ua.indexOf('59store') !== -1 && (browser = 'APP');
+    var h5LinkMap = {
+        PAGE_RECHARGE: "http://m.qeebike.com/#/user/recharge",
+        PAGE_COUPONS: "http://m.qeebike.com/#/user/coupon",
+        PAGE_WALLET: "http://m.qeebike.com/#/user/wallet",
+        PAGE_INVITE: "http://m.qeebike.com/"
+    }
 
-    if (token) {
-        browser = 'APP';
+    if (
+        ua.indexOf(encodeURIComponent('骑电').toLowerCase()) !== -1 ||
+        ua.indexOf('59store') !== -1 ||
+        ua.indexOf('qeebike') !== -1 ||
+        ua.indexOf('qeek') !== -1 ||
+        ua.indexOf('qiji') !== -1 ||
+        token
+    ) {
+        browser = 'APP'
     }
 
     ua.indexOf('micromessenger') !== -1 && (browser = 'WEIXIN');
 
     [].forEach.call(links, function(link) {
 
-        var href = link.href;
+        var href = link.dataset.href;
 
-        if (link.dataset.appLink) {
-
-            link.addEventListener('click', function() {
-                appLinkFuncs[this.dataset.appLink] && appLinkFuncs[this.dataset.appLink]();
-            });
-
+        if (!href) {
             return;
+        }
 
+        console.log(href)
+
+        if (appLinkMap[href]) {
+            href = browser === 'APP' ? appLinkMap[href] : h5LinkMap[href]   
         }
 
         if (href === 'javascript:void(0);') {
             return;
         }
 
-        if (href.indexOf('token=') === -1) {
+        if (browser !== 'APP' && href.indexOf('token=') === -1) {
 
             if (href.indexOf('?') === -1) {
 

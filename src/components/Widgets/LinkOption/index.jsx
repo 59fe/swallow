@@ -3,6 +3,13 @@ import { Icon, Select } from 'antd'
 import style from '../../RightSidebar/style.scss'
 
 const Option = Select.Option
+const appLinks = ["充值页面", "我的骑行券", "我的钱包", "邀请好友"]
+const appLinkMap = {
+    "充值页面": "PAGE_RECHARGE",
+    "我的骑行券": "PAGE_COUPONS",
+    "我的钱包": "PAGE_WALLET",
+    "邀请好友": "PAGE_INVITE"
+}
 
 export default class LinkOption extends React.Component{
 
@@ -42,29 +49,14 @@ export default class LinkOption extends React.Component{
         let widgetClassNames = [style.widget]
         !this.state.show && widgetClassNames.push(style.hideWidget)
 
-        let appInnerLinks = ['优惠券页面', '订单列表页面', '信用钱包页面', '花不完页面']
-        const getAPPInnerLink = (link) => {
-
-            if (appInnerLinks.some((item) => {
-                return item === link
-            })) {
-                return link
-            } else {
-                return 'null'
-            }
-
-        }
-
         let appInnerLinksSelector = null
         if (this.props.pageData.layout === 'mobile') {
             appInnerLinksSelector = (
-                <Select className={style.selectOption} size="large" onChange={(value) => this.__updateElementData('url', value)} defaultValue="null" value={getAPPInnerLink(element.url)}>
+                <Select className={style.selectOption} size="large" onChange={(value) => this.__updateElementData('url', value)} defaultValue="null" value={element.url}>
                     <Option key="0" value="null">无</Option>
-                    {appInnerLinks.map((item) => {
-                        return (
-                            <Option key={index + 1} value={item}>{item}</Option>
-                        )
-                    })}
+                    {appLinks.map((item) => (
+                        <Option key={index + 1} value={appLinkMap[item]}>{item}</Option>
+                    ))}
                 </Select>
             )
         }

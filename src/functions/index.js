@@ -24,18 +24,6 @@ const parseRemStyle = (style) => {
     ].join('')
 }
 
-const parseAppInnerLink = (href) => {
-
-    let appInnerLinks = ['优惠券页面', '订单列表页面', '信用钱包页面', '花不完页面']
-
-    if (appInnerLinks.indexOf(href) !== -1) {
-        return 'javascript:void(0);" data-app-link="' + href
-    } else {
-        return href
-    }
-
-}
-
 const getBackgroundImageTop = (images, index) => {
 
     var top = 0
@@ -168,7 +156,6 @@ export const buildTemplate = (data, type = 'mobile', release = false) => {
     } else if (type === 'mobile') {
 
         data.parseStyle = parseRemStyle
-        data.parseAppInnerLink = parseAppInnerLink
         data.release = release
         data.getBackgroundImageUrl = getBackgroundImageUrl
         data.statisticsCode = data.statistics === '1' ? statisticsCode : ''
