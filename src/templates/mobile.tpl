@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <title><%=title%></title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<script src="//fecdn.qeebike.com/sdk/hxsjssdk_1.0.js"></script>
 <script>!function(e){function h(){var a=f.getBoundingClientRect().width;640<a/b&&(a=640*b);a/=16;f.style.fontSize=a+"px";e.rem=a}function k(a,b,c,e){var d;return function(){var f=e||this,g=arguments,h=c&&!d;clearTimeout(d);d=setTimeout(function(){d=null;c||a.apply(f,g)},b);h&&a.apply(f,g)}}var b,a,d,c=e.document,g=e.navigator,f=c.documentElement,i=c.querySelector('meta[name="viewport"]');d=c.querySelector('meta[name="flexible"]');i?(d=i.getAttribute("content").match(/initial\-scale=(["']?)([\d\.]+)\1?/))&&(a=parseFloat(d[2]),b=parseInt(1/a)):d&&(d=d.getAttribute("content").match(/initial\-dpr=(["']?)([\d\.]+)\1?/))&&(b=parseFloat(j[2]),a=parseFloat((1/b).toFixed(2)));!b&&!a&&(b=e.devicePixelRatio,b=g.appVersion.match(/android/gi)||g.appVersion.match(/iphone/gi)?3<=b?3:2<=b?2:1:1,a=1/b);f.setAttribute("data-dpr",b);i||(a='<meta name="viewport" content="width=device-width, initial-scale='+a+", maximum-scale="+a+", minimum-scale="+a+', user-scalable=no" />',f.firstElementChild?(g=c.createElement("div"),g.innerHTML=a,f.firstElementChild.appendChild(g.firstChild)):c.write(a));e.dpr=b;e.addEventListener("resize",k(h,50),!1);e.addEventListener("pageshow",k(function(a){a.persisted&&h()},300),!1);"complete"===c.readyState?c.body.style.fontSize=12*b+"px":c.addEventListener("DOMContentLoaded",function(){c.body.style.fontSize=12*b+"px"},!1);h()}(window);</script>
 <style>
 html,body{
@@ -48,7 +47,6 @@ body{
         <%elements.links.forEach(function(link){ %><a class="link-element" style="<%=parseStyle(link)%>" href="<%=link.url%>" data-href="<%=link.url%>" target="<%=link.target%>"></a><% })%>
     </div>
 </div>
-<script src="//res.wx.qq.com/open/js/jweixin-1.3.0.js"></script>
 <script>
 ~function() {
 
@@ -95,6 +93,9 @@ body{
         browser = 'WeAPP'
     }
 
+    var includeAppLink = false
+    var needShare = `<%=shareTitle%><%=shareDesc%><%=shareImage%>`;
+
     [].forEach.call(links, function(link) {
 
         var href = link.dataset.href;
@@ -104,6 +105,7 @@ body{
         }
 
         if (appLinkMap[href]) {
+            includeAppLink = true
             if (browser === 'WeAPP') {
                 link.onclick = function () {
                     wx.miniProgram.navigateTo({url: weappLinkMap[href]})
@@ -138,47 +140,75 @@ body{
 
     });
 
-    if (browser === 'APP' && typeof HXSJSBridge !== 'undefined') {
+    console.log(includeAppLink)
+    console.log(needShare)
 
-        HXSJSBridge.setNavigationButton({
-            type: null,
-            title: null,
-            image: null,
-            link: null
-        });
+    if (includeAppLink || needShare) {
 
-        HXSJSBridge.setShareInfo({
-            type: [1,2,3,4],
-            title: '<%=shareTitle%>' || document.title,
-            content: '<%=shareDesc%>' ? '<%=shareDesc%>'.substr(0, 45) : '暂无介绍',
-            image: '<%=shareImage%>',
-            link: location.href.replace('token=' + token, '')
-        });
+        console.log(browser)
 
-    } else if (browser === 'WEIXIN' && typeof wx !== 'undefined') {
+        if (browser === 'APP') {
 
-        var script = document.createElement('script');
-        script.src = '//wx.qeebike.com/wechat/jsconfig?mpName=qeebike&url=' + encodeURIComponent(location.href.split('#')[0])
-        document.body.appendChild(script)
+            var appSDKScript = document.createElement('scrpt')
 
-        setTimeout(function() {
-            wx.ready(function() {
+            appSDKScript.onload = function () {
 
-                wx.onMenuShareAppMessage({
-                    title: '<%=shareTitle%>' || document.title,
-                    desc: '<%=shareDesc%>' ? '<%=shareDesc%>'.substr(0, 45) : '暂无介绍',
-                    imgUrl: '<%=shareImage%>',
-                    link: location.href.replace('token=' + token, '')
-                });
+                if (typeof HXSJSBridge !== 'undefined') {
+                    HXSJSBridge.setNavigationButton({
+                        type: null,
+                        title: null,
+                        image: null,
+                        link: null
+                    });
 
-                wx.onMenuShareTimeline({
-                    title: '<%=shareTitle%>' || document.title,
-                    imgUrl: '<%=shareImage%>',
-                    link: location.href.replace('token=' + token, '')
-                });
+                    HXSJSBridge.setShareInfo({
+                        type: [1,2,3,4],
+                        title: '<%=shareTitle%>' || document.title,
+                        content: '<%=shareDesc%>' ? '<%=shareDesc%>'.substr(0, 45) : '暂无介绍',
+                        image: '<%=shareImage%>',
+                        link: location.href.replace('token=' + token, '')
+                    });
+                }
 
-            });
-        }, 50)
+            }
+
+            document.body.appendChild(appSDKScript)
+            appSDKScript.src = '//fecdn.qeebike.com/sdk/hxsjssdk_1.0.js'
+
+        } else if (browser === 'WEIXIN' || browser === 'WeAPP') {
+
+            var wxSDKScript = document.createElement('script');
+
+            wxSDKScript.onload = function () {
+
+                var wxConfigScript = document.createElement('script');
+
+                wxConfigScript.onload = function () {
+                    typeof wx !== 'undefined' && wx.ready(function() {
+                        wx.onMenuShareAppMessage({
+                            title: '<%=shareTitle%>' || document.title,
+                            desc: '<%=shareDesc%>' ? '<%=shareDesc%>'.substr(0, 45) : '暂无介绍',
+                            imgUrl: '<%=shareImage%>',
+                            link: location.href.replace('token=' + token, '')
+                        });
+                        wx.onMenuShareTimeline({
+                            title: '<%=shareTitle%>' || document.title,
+                            imgUrl: '<%=shareImage%>',
+                            link: location.href.replace('token=' + token, '')
+                        });
+                    })
+                }
+
+                document.body.appendChild(wxConfigScript)
+                wxConfigScript.src = '//wx.qeebike.com/wechat/jsconfig?mpName=qeebike&url=' + encodeURIComponent(location.href.split('#')[0])
+
+            }
+
+            console.log(wxSDKScript)
+            document.body.appendChild(wxSDKScript)
+            wxSDKScript.src = '//res.wx.qq.com/open/js/jweixin-1.3.0.js'
+
+        }
 
     }
 
