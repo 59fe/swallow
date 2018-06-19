@@ -47,12 +47,40 @@ body{
         <%elements.links.forEach(function(link){ %><a class="link-element" style="<%=parseStyle(link)%>" href="<%=link.url%>" data-href="<%=link.url%>" target="<%=link.target%>"></a><% })%>
     </div>
 </div>
+<%
+var includeAPPLinks = elements.links.filter(link => ['PAGE_RECHARGE', 'PAGE_COUPONS', 'PAGE_WALLET', 'PAGE_INVITE'].includes(link.url)).length > 0
+var needShare = shareTitle + shareDesc + shareImage
+%>
+<%
+if (includeAPPLinks || needShare) {
+%>
 <script>
 ~function() {
 
     var token = $get('token');
     var browser = null;
     var ua = navigator.userAgent.toLowerCase();
+
+    if (
+        ua.indexOf(encodeURIComponent('骑电').toLowerCase()) !== -1 ||
+        ua.indexOf('59store') !== -1 ||
+        ua.indexOf('qeebike') !== -1 ||
+        ua.indexOf('qeek') !== -1 ||
+        ua.indexOf('qiji') !== -1 ||
+        token
+    ) {
+        browser = 'APP'
+    }
+
+    ua.indexOf('micromessenger') !== -1 && (browser = 'WEIXIN');
+
+    if (window.__wxjs_environment && window.__wxjs_environment === 'miniprogram') {
+        browser = 'WeAPP'
+    }
+
+<%
+    if (includeAPPLinks) {
+%>
     var links = document.querySelectorAll('a');
 
     var appLinkMap = {
@@ -76,27 +104,7 @@ body{
         PAGE_INVITE: "redirect?authorize=1&url=invite"
     }
 
-    if (
-        ua.indexOf(encodeURIComponent('骑电').toLowerCase()) !== -1 ||
-        ua.indexOf('59store') !== -1 ||
-        ua.indexOf('qeebike') !== -1 ||
-        ua.indexOf('qeek') !== -1 ||
-        ua.indexOf('qiji') !== -1 ||
-        token
-    ) {
-        browser = 'APP'
-    }
-
-    ua.indexOf('micromessenger') !== -1 && (browser = 'WEIXIN');
-
-    if (window.__wxjs_environment && window.__wxjs_environment === 'miniprogram') {
-        browser = 'WeAPP'
-    }
-
-    var includeAppLink = false
-    var needShare = `<%=shareTitle%><%=shareDesc%><%=shareImage%>`;
-
-    [].forEach.call(links, function(link) {
+    ;[].forEach.call(links, function(link) {
 
         var href = link.dataset.href;
 
@@ -140,76 +148,80 @@ body{
 
     });
 
-    console.log(includeAppLink)
-    console.log(needShare)
+<%
+    }
+%>
 
-    if (includeAppLink || needShare) {
+    if (browser === 'APP') {
 
-        console.log(browser)
+        var appSDKScript = document.createElement('scrpt')
 
-        if (browser === 'APP') {
+        appSDKScript.onload = function () {
 
-            var appSDKScript = document.createElement('scrpt')
-
-            appSDKScript.onload = function () {
-
-                if (typeof HXSJSBridge !== 'undefined') {
-                    HXSJSBridge.setNavigationButton({
-                        type: null,
-                        title: null,
-                        image: null,
-                        link: null
-                    });
-
-                    HXSJSBridge.setShareInfo({
-                        type: [1,2,3,4],
-                        title: '<%=shareTitle%>' || document.title,
-                        content: '<%=shareDesc%>' ? '<%=shareDesc%>'.substr(0, 45) : '暂无介绍',
-                        image: '<%=shareImage%>',
-                        link: location.href.replace('token=' + token, '')
-                    });
-                }
-
+            if (typeof HXSJSBridge !== 'undefined') {
+                HXSJSBridge.setNavigationButton({
+                    type: null,
+                    title: null,
+                    image: null,
+                    link: null
+                });
+<%
+    if (needShare) {
+%>
+                HXSJSBridge.setShareInfo({
+                    type: [1,2,3,4],
+                    title: '<%=shareTitle%>' || document.title,
+                    content: '<%=shareDesc%>' ? '<%=shareDesc%>'.substr(0, 45) : '暂无介绍',
+                    image: '<%=shareImage%>',
+                    link: location.href.replace('token=' + token, '')
+                });
+<%
+    }
+%>
             }
-
-            document.body.appendChild(appSDKScript)
-            appSDKScript.src = '//fecdn.qeebike.com/sdk/hxsjssdk_1.0.js'
-
-        } else if (browser === 'WEIXIN' || browser === 'WeAPP') {
-
-            var wxSDKScript = document.createElement('script');
-
-            wxSDKScript.onload = function () {
-
-                var wxConfigScript = document.createElement('script');
-
-                wxConfigScript.onload = function () {
-                    typeof wx !== 'undefined' && wx.ready(function() {
-                        wx.onMenuShareAppMessage({
-                            title: '<%=shareTitle%>' || document.title,
-                            desc: '<%=shareDesc%>' ? '<%=shareDesc%>'.substr(0, 45) : '暂无介绍',
-                            imgUrl: '<%=shareImage%>',
-                            link: location.href.replace('token=' + token, '')
-                        });
-                        wx.onMenuShareTimeline({
-                            title: '<%=shareTitle%>' || document.title,
-                            imgUrl: '<%=shareImage%>',
-                            link: location.href.replace('token=' + token, '')
-                        });
-                    })
-                }
-
-                document.body.appendChild(wxConfigScript)
-                wxConfigScript.src = '//wx.qeebike.com/wechat/jsconfig?mpName=qeebike&url=' + encodeURIComponent(location.href.split('#')[0])
-
-            }
-
-            console.log(wxSDKScript)
-            document.body.appendChild(wxSDKScript)
-            wxSDKScript.src = '//res.wx.qq.com/open/js/jweixin-1.3.0.js'
 
         }
 
+        document.body.appendChild(appSDKScript)
+        appSDKScript.src = '//fecdn.qeebike.com/sdk/hxsjssdk_1.0.js'
+
+    } else if (browser === 'WEIXIN' || browser === 'WeAPP') {
+
+        var wxSDKScript = document.createElement('script');
+
+        wxSDKScript.onload = function () {
+
+            var wxConfigScript = document.createElement('script');
+
+            wxConfigScript.onload = function () {
+                typeof wx !== 'undefined' && wx.ready(function() {
+<%
+    if (needShare) {
+%>
+                    wx.onMenuShareAppMessage({
+                        title: '<%=shareTitle%>' || document.title,
+                        desc: '<%=shareDesc%>' ? '<%=shareDesc%>'.substr(0, 45) : '暂无介绍',
+                        imgUrl: '<%=shareImage%>',
+                        link: location.href.replace('token=' + token, '')
+                    });
+                    wx.onMenuShareTimeline({
+                        title: '<%=shareTitle%>' || document.title,
+                        imgUrl: '<%=shareImage%>',
+                        link: location.href.replace('token=' + token, '')
+                    });
+<%
+    }
+%>
+                })
+            }
+
+            document.body.appendChild(wxConfigScript)
+            wxConfigScript.src = '//wx.qeebike.com/wechat/jsconfig?mpName=qeebike&url=' + encodeURIComponent(location.href.split('#')[0])
+
+        }
+
+        document.body.appendChild(wxSDKScript)
+        wxSDKScript.src = '//res.wx.qq.com/open/js/jweixin-1.3.0.js'
     }
 
     function $get(name){
@@ -227,6 +239,7 @@ body{
 
 }();
 </script>
+<%}%>
 <div class="statistics">
 <%=statisticsCode%>
 </div>
