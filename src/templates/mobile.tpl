@@ -48,7 +48,9 @@ body{
     </div>
 </div>
 <%
-var includeAPPLinks = elements.links.filter(link => ['PAGE_RECHARGE', 'PAGE_COUPONS', 'PAGE_WALLET', 'PAGE_INVITE'].includes(link.url)).length > 0
+var includeAPPLinks = elements.links.filter(function(link) {
+    return ['PAGE_RECHARGE', 'PAGE_COUPONS', 'PAGE_WALLET', 'PAGE_INVITE'].includes(link.url)
+}).length > 0
 var needShare = shareTitle + shareDesc + shareImage
 %>
 <%
@@ -239,7 +241,9 @@ if (includeAPPLinks || needShare) {
 
 }();
 </script>
-<%}%>
+<%
+}
+%>
 <div class="statistics">
 <%=statisticsCode%>
 </div>
