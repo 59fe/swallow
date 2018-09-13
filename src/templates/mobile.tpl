@@ -185,7 +185,7 @@ if (includeAPPLinks || needShare) {
         }
 
         document.body.appendChild(appSDKScript)
-        appSDKScript.src = '//fecdn.qeebike.com/sdk/hxsjssdk_1.0.js'
+        appSDKScript.src = '//fecdn.qeebike.com/sdk/hxsjssdk_1.0.js?v20180913'
 
     } else if (browser === 'WEIXIN' || browser === 'WeAPP') {
 
