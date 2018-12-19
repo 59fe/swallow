@@ -49,7 +49,7 @@ body{
 </div>
 <%
 var includeAPPLinks = elements.links.filter(function(link) {
-    return ['PAGE_RECHARGE', 'PAGE_COUPONS', 'PAGE_WALLET', 'PAGE_INVITE'].includes(link.url)
+    return ['PAGE_RECHARGE', 'PAGE_COUPONS', 'PAGE_WALLET', 'PAGE_INVITE', 'PAGE_RENTBIKE'].includes(link.url)
 }).length > 0
 var needShare = shareTitle + shareDesc + shareImage
 %>
@@ -57,6 +57,10 @@ var needShare = shareTitle + shareDesc + shareImage
 if (includeAPPLinks || needShare) {
 %>
 <script>
+if (navigator.userAgent.indexOf('AlipayClient') > -1) {
+    document.writeln('<script src="https://appx/web-view.min.js"' + '>' + '<' + '/' + 'script>');
+}
+
 ~function() {
 
     var token = $get('token');
@@ -69,12 +73,15 @@ if (includeAPPLinks || needShare) {
         ua.indexOf('qeebike') !== -1 ||
         ua.indexOf('qeek') !== -1 ||
         ua.indexOf('qiji') !== -1 ||
+        ua.indexOf('骑电') !== -1 || 
+        ua.indexOf(encodeURIComponent('骑电').toLowerCase()) !== -1 ||
         token
     ) {
         browser = 'APP'
     }
 
     ua.indexOf('micromessenger') !== -1 && (browser = 'WEIXIN');
+    ua.indexOf('alipayclient') !== -1 && (browser = 'AntAPP');
 
     if (window.__wxjs_environment && window.__wxjs_environment === 'miniprogram') {
         browser = 'WeAPP'
@@ -89,21 +96,24 @@ if (includeAPPLinks || needShare) {
         PAGE_RECHARGE: "qeebike://wallet/recharge",
         PAGE_COUPONS: "qeebike://personal/coupon",
         PAGE_WALLET: "qeebike://personal/my_wallet",
-        PAGE_INVITE: "qeebike://personal/invite_friend"
+        PAGE_INVITE: "qeebike://personal/invite_friend",
+        PAGE_RENTBIKE: "qeebike://rentalbike/package"
     }
 
     var h5LinkMap = {
         PAGE_RECHARGE: "//m.qeebike.com/#/user/recharge",
         PAGE_COUPONS: "//m.qeebike.com/#/user/coupons",
         PAGE_WALLET: "//m.qeebike.com/#/user/wallet",
-        PAGE_INVITE: "//m.qeebike.com/"
+        PAGE_INVITE: "//m.qeebike.com/",
+        PAGE_RENTBIKE: "//m.qeebike.com/"
     }
 
     var weappLinkMap = {
         PAGE_RECHARGE: "redirect?authorize=1&url=recharge",
         PAGE_COUPONS: "redirect?authorize=1&url=coupons",
         PAGE_WALLET: "redirect?authorize=1&url=wallet",
-        PAGE_INVITE: "redirect?authorize=1&url=invite"
+        PAGE_INVITE: "redirect?authorize=1&url=invite",
+        PAGE_RENTBIKE: "redirect?url=rententry"
     }
 
     ;[].forEach.call(links, function(link) {
@@ -121,6 +131,11 @@ if (includeAPPLinks || needShare) {
                     wx.miniProgram.navigateTo({url: weappLinkMap[href]})
                     return false
                 }
+            } else if (browser === 'AntAPP') {
+                link.onclick = function () {
+                    my.navigateTo({url: weappLinkMap[href]})
+                    return false
+                }
             } else {
                 href = browser === 'APP' ? appLinkMap[href] : h5LinkMap[href]
             }
@@ -130,7 +145,7 @@ if (includeAPPLinks || needShare) {
             return;
         }
 
-        if (browser !== 'APP' && browser !=='WeAPP' && href.indexOf('token=') === -1) {
+        if (browser !== 'APP' && browser !=='WeAPP' && browser !== 'AntAPP' && href.indexOf('token=') === -1) {
 
             if (href.indexOf('?') === -1) {
 

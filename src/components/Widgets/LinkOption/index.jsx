@@ -3,12 +3,13 @@ import { Icon, Select } from 'antd'
 import style from '../../RightSidebar/style.scss'
 
 const Option = Select.Option
-const appLinks = ["充值页面", "我的骑行券", "我的钱包", "邀请好友"]
+const appLinks = ["充值页面", "我的骑行券", "我的钱包", "邀请好友", "月租车购买入口"]
 const appLinkMap = {
     "充值页面": "PAGE_RECHARGE",
     "我的骑行券": "PAGE_COUPONS",
     "我的钱包": "PAGE_WALLET",
-    "邀请好友": "PAGE_INVITE"
+    "邀请好友": "PAGE_INVITE",
+    "月租车购买入口": "PAGE_RENTBIKE"
 }
 
 export default class LinkOption extends React.Component{
