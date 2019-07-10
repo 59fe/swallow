@@ -83,8 +83,8 @@ module.exports = {
         new webpack.optimize.DedupePlugin(),
         new webpack.optimize.UglifyJsPlugin({
             sourceMap: false,
-            unused: true,
-            dead_code: true,
+            unused: false,
+            dead_code: false,
             warnings: false
         }),
         new HtmlWebpackPlugin({
