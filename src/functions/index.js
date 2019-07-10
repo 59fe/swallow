@@ -179,7 +179,7 @@ export const buildTemplate = (data, type = 'mobile', release = false) => {
 export const configJson = () => {
 
     return {
-      "APIURL": "http://" + location.host,
-      "CDNURL": "http://m.qeebike.com/activity"
+      "APIURL": "//" + location.host,
+      "CDNURL": "//m.qeebike.com/activity"
     }
 }
