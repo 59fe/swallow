@@ -21,7 +21,7 @@ module.exports = {
     output: {
         path: path.join(__dirname, './dist'),
         filename: '[name].[chunkhash:5].js',
-        publicPath: 'http://fecdn.qeebike.com/repo/swallow/'
+        publicPath: '//fecdn.qeebike.com/repo/swallow/'
     },
     module: {
         loaders: [
